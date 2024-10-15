@@ -1,24 +1,26 @@
-import numpy as np
-import gradio as gr
 from PIL import Image, ImageDraw, ImageFont
-import easyocr
+import io
+import base64
+import numpy as np
 
-def create_reader(languages: list):
-  return easyocr.Reader(languages, gpu=False)
+def encode_image(image_path):
+  image = Image.fromarray(image_path)
 
-def plot_bbox(easy_ocr_result, image):
-  bboxs = []
-  texts = []
-  confidents_level = []
+ # chuyển đổi thành byte
+  buffered = io.BytesIO()
+  image.save(buffered, format="PNG")
+  img_byte_arr = buffered.getvalue()
+
+  return img_byte_arr
+
+
+def plot_bbox(ocr_result, image):
+  bboxs = ocr_result['bboxs']
+  texts = ocr_result['texts']
+  confidents_level = ['score']
 
   # Chuyển đổi hình ảnh thành đối tượng PIL Image
   image = Image.fromarray(image)
-  for results in easy_ocr_result:
-    # Chuyển đổi mỗi tọa độ về kiểu int
-
-    bboxs.append(results[0])
-    texts.append(results[1])
-    confidents_level.append(results[2])
 
   # Tạo đối tượng vẽ trên ảnh
   draw = ImageDraw.Draw(image)
@@ -62,27 +64,3 @@ def plot_bbox(easy_ocr_result, image):
     draw.text(top_left, label, font=font, fill="black")
 
   return image
-
-def extract_ocr(input_image, languages):
-  EASY_OCR = create_reader(languages)
-  ocr_result = EASY_OCR.readtext(input_image, slope_ths=0.5,
-                                 height_ths=1.0, width_ths=1.5)
-
-#   print(ocr_result)
-  image = plot_bbox(ocr_result, input_image)
-  print(image)
-  return np.array(image)
-
-
-# Định nghĩa biến demo ở phạm vi toàn cục
-choices = ["vi", "en", "ko", "ch_sim"]
-demo = gr.Interface(
-    fn=extract_ocr,
-    inputs=["image",
-            gr.CheckboxGroup(choices=choices, label="Languages")],
-    outputs=["image"],
-)
-
-if __name__ == "__main__":
-
-  demo.launch()
