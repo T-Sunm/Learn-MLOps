@@ -1,0 +1,5 @@
+pandas==2.2.2
+easyocr==1.7.2
+transformers[torch]==4.45.2
+torch==2.4.1
+optimum==1.23.1

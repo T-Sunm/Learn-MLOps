@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Form, status, HTTPException
 from controller.ocr import extract_ocr
 import json
-from schemas import ocr_output
+from schemas import ocr_output, ocr_response
 
 ocr_router = APIRouter()
 
@@ -19,10 +19,18 @@ async def predict_ocr(
   languages_list = json.loads(languages)
   bboxs, texts, confidents_level = extract_ocr(file_content, languages_list)
   print(languages)
-#   if "lỗi":
-#     raise HTTPException(status_code=404, detail='Band not Found')
-  return ocr_output(
-      bboxs=bboxs,
-      texts=texts,
-      score=confidents_level
+  #   if "lỗi":
+  #     raise HTTPException(status_code=404, detail='Band not Found')
+
+  ocr_data = {
+      "bboxs": bboxs,
+      "texts": texts,
+      "score": confidents_level
+  }
+  # Tạo đối tượng từ ocr_output
+  ocr_output_instance = ocr_output(**ocr_data)
+
+  return ocr_response(
+      data=ocr_output_instance,
+      status_code=status.HTTP_200_OK  # Trả về mã trạng thái 200
   )

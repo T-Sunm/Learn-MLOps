@@ -1,6 +1,4 @@
 import requests
-import io
-from PIL import Image
 import numpy as np
 from utils.pre_img import encode_image, plot_bbox
 import json
