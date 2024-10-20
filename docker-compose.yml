@@ -1,0 +1,28 @@
+services:
+  backend:
+    build:
+      context: ./server
+    container_name: backend_cont
+    env_file:
+      - ./server/.env
+    networks:
+      - aio_mlops_net
+    ports:
+      - 8000:8000
+    entrypoint: "python main.py"
+
+  frontend:
+    build:
+      context: ./client
+    container_name: frontend_cont
+    env_file:
+      - ./client/.env
+    networks:
+      - aio_mlops_net
+    ports:
+      - 3000:3000
+    entrypoint: "python app.py"
+
+networks:
+  aio_mlops_net:
+    driver: bridge

@@ -2,7 +2,12 @@ import requests
 import numpy as np
 from utils.pre_img import encode_image, plot_bbox
 import json
-BACKEND_URL = "http://127.0.0.1:8000"
+import os
+from dotenv import load_dotenv
+
+# Load biến môi trường từ file .env
+load_dotenv()
+BACKEND_URL = os.getenv("BACKEND_URL", "http://0.0.0.0:8000")
 
 
 def ocr_api(image_path: np.ndarray, languages: list[str]):
