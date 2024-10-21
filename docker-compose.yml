@@ -9,7 +9,7 @@ services:
       - aio_mlops_net
     ports:
       - 8000:8000
-    entrypoint: "python main.py"
+    entrypoint: "python src/main.py"
 
   frontend:
     build:

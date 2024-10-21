@@ -2,13 +2,16 @@ FROM python:3.9.20-slim
 
 WORKDIR /app
 
-# Sao chép toàn bộ mã nguồn vào thư mục làm việc
-COPY . . 
+# layer cache thay vì cache hết
+COPY ./requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
+COPY ./model /app/model
+
+COPY . .
 # Mở cổng 8000
 EXPOSE 8000 
 
 # Chạy ứng dụng
-CMD ["python", "main.py"]
+CMD ["python", "src/main.py"]

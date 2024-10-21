@@ -21,6 +21,5 @@ def ocr_api(image_path: np.ndarray, languages: list[str]):
   }
 
   response = requests.post(url, files=files, data=option)
-
-  image_bbox = plot_bbox(response.json(), image_path)
+  image_bbox = plot_bbox(response.json()['data'], image_path)
   return image_bbox
